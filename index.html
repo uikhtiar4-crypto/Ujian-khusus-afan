@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UJIAN MALAM GOPAN</title>
+<style>
+:root{--blue:#2457c5;--light:#eef4ff;--ink:#17233b;--green:#16845b;--red:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(160deg,#edf4ff,#f8fbff);color:var(--ink);line-height:1.5}
+header{background:var(--blue);color:white;padding:25px 16px;text-align:center}
+header h1{margin:0 0 6px;font-size:clamp(24px,5vw,34px)}
+header p{margin:0;opacity:.95}
+main{max-width:780px;margin:22px auto;padding:0 14px 35px}
+.panel{background:white;border-radius:18px;padding:22px;box-shadow:0 8px 25px #193b7712;margin-bottom:16px}
+h2{margin-top:0;font-size:22px}
+label{display:block;font-weight:bold;margin:12px 0 5px}
+input,select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;background:white}
+button{border:0;border-radius:11px;padding:13px 18px;font-size:16px;font-weight:bold;cursor:pointer}
+.primary{background:var(--blue);color:white;width:100%;margin-top:18px}
+.secondary{background:#e8efff;color:var(--blue)}
+.question{border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin:14px 0}
+.question h3{font-size:17px;margin:0 0 10px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:9px;margin:6px 0;background:#f7f9fd;font-weight:normal;cursor:pointer}
+.option input{width:auto;margin-top:4px}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.timer{background:#fff1d6;color:#814d00;padding:8px 12px;border-radius:10px;font-weight:bold}
+.progress{height:8px;background:#e5eaf3;border-radius:10px;overflow:hidden;margin-top:12px}
+.progress div{height:100%;background:var(--green);width:0%;transition:width .2s}
+.hidden{display:none!important}
+.result{text-align:center}
+.score{font-size:48px;font-weight:800;color:var(--blue);margin:5px 0}
+.good{color:var(--green)}.bad{color:var(--red)}
+.small{font-size:13px;color:#5b6780}
+footer{text-align:center;color:#667085;font-size:13px;padding:8px 12px 25px}
+</style>
+</head>
+<body>
+<header>
+  <h1>UJIAN MALAM GOPAN</h1>
+  <p>Ujian Pendidikan Agama Islam • Kelas 4 SD</p>
+</header>
+<main>
+  <section id="identity" class="panel">
+    <h2>Selamat datang, siswa hebat! 🌟</h2>
+    <p>Isi identitas terlebih dahulu, lalu tekan <b>Mulai Ujian</b>. Bacalah setiap soal dengan teliti.</p>
+    <label for="studentName">Nama siswa</label>
+    <input id="studentName" autocomplete="name" placeholder="Tulis nama lengkap" required>
+    <label for="studentClass">Kelas</label>
+    <select id="studentClass"><option value="4A">4A</option><option value="4B">4B</option><option value="4C">4C</option><option value="4">Kelas 4 (lainnya)</option></select>
+    <label for="studentNumber">Nomor absen</label>
+    <input id="studentNumber" type="number" min="1" max="50" placeholder="Contoh: 12">
+    <div class="small">Petunjuk: Pilih satu jawaban yang paling tepat pada setiap soal.</div>
+    <button class="primary" id="startBtn">Mulai Ujian</button>
+  </section>
+
+  <section id="exam" class="panel hidden">
+    <div class="topline">
+      <div><b id="welcome"></b><div class="small">Kerjakan dengan jujur dan teliti.</div></div>
+      <div class="timer">⏱ Waktu: <span id="timer">30:00</span></div>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div id="questions"></div>
+    <button class="primary" id="submitBtn">Selesaikan & Lihat Nilai</button>
+    <p class="small">Pastikan semua jawaban sudah dipilih sebelum mengumpulkan ujian.</p>
+  </section>
+
+  <section id="result" class="panel hidden result">
+    <h2>Hasil Ujian</h2>
+    <p id="studentResult"></p>
+    <div class="score" id="score">0</div>
+    <p id="remark"></p>
+    <p id="detail"></p>
+    <button class="primary" id="retryBtn">Ulangi Ujian</button>
+    <button class="secondary" id="printBtn" style="margin-top:10px;width:100%">Cetak Hasil</button>
+    <p class="small">Nilai ini untuk latihan. Guru dapat menyesuaikan soal dengan materi yang sudah diajarkan di sekolah.</p>
+  </section>
+</main>
+<footer>Website latihan ujian PAI • Kelas 4 SD</footer>
+<script>
+const quiz = [
+ {q:"Surah pertama dalam Al-Qur'an adalah ...",a:["Al-Fatihah","Al-Ikhlas","An-Nas","Al-Falaq"],c:0},
+ {q:"Kitab suci yang diturunkan kepada Nabi Muhammad saw. adalah ...",a:["Taurat","Zabur","Al-Qur'an","Injil"],c:2},
+ {q:"Rukun Islam yang pertama adalah ...",a:["Salat","Puasa","Zakat","Syahadat"],c:3},
+ {q:"Salat wajib dalam sehari semalam berjumlah ...",a:["Tiga waktu","Empat waktu","Lima waktu","Enam waktu"],c:2},
+ {q:"Sebelum salat, umat Islam bersuci dengan ...",a:["Wudu","Tidur","Makan","Bermain"],c:0},
+ {q:"Nabi terakhir yang diutus Allah Swt. adalah ...",a:["Nabi Musa a.s.","Nabi Isa a.s.","Nabi Ibrahim a.s.","Nabi Muhammad saw."],c:3},
+ {q:"Sifat berkata sesuai kenyataan disebut ...",a:["Sombong","Jujur","Malas","Iri"],c:1},
+ {q:"Jika teman mengalami kesulitan, sebaiknya kita ...",a:["Mengejeknya","Membiarkannya","Membantu semampunya","Menertawakannya"],c:2},
+ {q:"Puasa wajib bagi umat Islam dilaksanakan pada bulan ...",a:["Syawal","Ramadan","Safar","Muharam"],c:1},
+ {q:"Malaikat yang bertugas menyampaikan wahyu adalah ...",a:["Mikail","Israfil","Jibril","Izrail"],c:2},
+ {q:"Berbuat baik dan hormat kepada ayah serta ibu disebut ...",a:["Durhaka","Berbakti","Bersaing","Berbohong"],c:1},
+ {q:"Ketika memulai kegiatan yang baik, kita dianjurkan membaca ...",a:["Basmalah","Hamdalah","Istigfar saja","Takbir saja"],c:0},
+ {q:"Hari raya setelah umat Islam berpuasa Ramadan adalah ...",a:["Iduladha","Idulfitri","Tahun Baru","Maulid Nabi"],c:1},
+ {q:"Jumlah rukun iman adalah ...",a:["Empat","Lima","Enam","Tujuh"],c:2},
+ {q:"Jika melakukan kesalahan, sikap yang baik adalah ...",a:["Menyalahkan orang lain","Berpura-pura tidak tahu","Meminta maaf dan memperbaiki diri","Mengulanginya"],c:2}
+];
+let timeLeft=1800, timerId=null, submitted=false;
+const $=id=>document.getElementById(id);
+function renderQuestions(){
+ $('questions').innerHTML=quiz.map((item,i)=>`<div class="question"><h3>${i+1}. ${item.q}</h3>${item.a.map((opt,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${opt}</span></label>`).join('')}</div>`).join('');
+ $('questions').addEventListener('change',updateProgress);
+}
+function updateProgress(){
+ const answered=quiz.filter((_,i)=>document.querySelector(`input[name="q${i}"]:checked`)).length;
+ $('progressBar').style.width=(answered/quiz.length*100)+'%';
+}
+function startTimer(){
+ timerId=setInterval(()=>{
+  timeLeft--;
+  $('timer').textContent=String(Math.floor(timeLeft/60)).padStart(2,'0')+':'+String(timeLeft%60).padStart(2,'0');
+  if(timeLeft<=0){clearInterval(timerId);finishExam(true)}
+ },1000);
+}
+function startExam(){
+ if(!$('studentName').value.trim()){alert('Silakan isi nama siswa terlebih dahulu.');$('studentName').focus();return}
+ $('identity').classList.add('hidden');$('exam').classList.remove('hidden');
+ $('welcome').textContent=$('studentName').value.trim()+' • Kelas '+$('studentClass').value;
+ renderQuestions();startTimer();window.scrollTo({top:0,behavior:'smooth'});
+}
+function finishExam(auto=false){
+ if(submitted)return;
+ if(!auto){
+  const unanswered=quiz.filter((_,i)=>!document.querySelector(`input[name="q${i}"]:checked`)).length;
+  if(unanswered && !confirm(`Masih ada ${unanswered} soal yang belum dijawab. Tetap kumpulkan?`))return;
+  if(!confirm('Yakin ingin menyelesaikan ujian?'))return;
+ }
+ submitted=true;clearInterval(timerId);
+ let correct=0;
+ quiz.forEach((item,i)=>{const chosen=document.querySelector(`input[name="q${i}"]:checked`);if(chosen&&Number(chosen.value)===item.c)correct++});
+ const score=Math.round(correct/quiz.length*100);
+ $('exam').classList.add('hidden');$('result').classList.remove('hidden');
+ $('studentResult').textContent=`Nama: ${$('studentName').value.trim()} • Kelas: ${$('studentClass').value} • Absen: ${$('studentNumber').value||'-'}`;
+ $('score').textContent=score;
+ $('remark').textContent=score>=90?'Hebat sekali! Pertahankan belajarmu!':score>=75?'Bagus! Terus berlatih agar makin paham.':score>=60?'Tetap semangat. Pelajari lagi materi yang belum dikuasai.':'Jangan menyerah. Ayo belajar dan coba lagi!';
+ $('detail').innerHTML=`Jawaban benar: <b class="good">${correct}</b> dari ${quiz.length}<br>Jawaban salah atau kosong: <b class="bad">${quiz.length-correct}</b>${auto?'<br><span class="small">Waktu habis; jawaban dikumpulkan otomatis.</span>':''}`;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function retry(){
+ submitted=false;timeLeft=1800;$('timer').textContent='30:00';$('progressBar').style.width='0%';
+ $('result').classList.add('hidden');$('identity').classList.remove('hidden');$('studentName').value='';$('studentNumber').value='';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+$('startBtn').addEventListener('click',startExam);
+$('submitBtn').addEventListener('click',()=>finishExam(false));
+$('retryBtn').addEventListener('click',retry);
+$('printBtn').addEventListener('click',()=>window.print());
+</script>
+</body>
+</html>
